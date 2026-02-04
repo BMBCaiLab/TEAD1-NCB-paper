@@ -1,1 +1,26 @@
+Author: Ethan Black
+Pipeline created using Cellprofiler 4.2.5
+File type: TIFF
 
+Input Files: Split each channel of your image into a TIFF. I recommend creating a script that automates this in Fiji.
+  Example- 
+    Raw file: 'Image_file.czi' with 2 channels
+    Input Ready: 'Image_file_C001.tif' and 'Image_file_C002.tif'
+  Input files also work best when they contain 1-6 cells. Analysis requires the use of a nuclear dye.
+
+The pipeline uses metadata from the filename to create different Names and objects
+  -The regex included in the pipeline was generated using my file naming scheme. Here is an example file name, please feel free to adapt the regex to fit your own.
+  -Example: HK2 TEAD1 488_2_0 H3K9me3 568_0_6-01_airyscanprocessed_.czi.S001.T001.C001.ome
+
+Object Thresholding: Please do a test run with your images to ensure my thresholding also works with your images before running the full analysis
+
+Filtering in this pipeline was created by looking at the parameters of the object created by the MeasureObjectSizeShape. Please adjust these for your target object's parameters
+  -Despite filtering, due to the thresholding strategy there are still occasionally false positive objects. For now, I have been manually filtering these out after analysis. 
+
+Outputs and data analysis: 
+  -The output folder will contain a subfolder called 'saveimage'. This contains the thresholding for the nucleus and condensate objects as well as numerical codes to identify them in the spreadsheet. This is for quality control purposes and is how the manual filtering is done.
+  -To generate your % of cells expressing the TEAD condensate, use the data from the Nucleus output excel sheet. 
+    -The column "object number" is your nucleus count
+    -The column 'Children_Filtered_TEAD_Nuclear_Count' is the count of your filtered nuclei
+    -We are interested in the % of cells expressing condensates, so create columns that use the '=COUNTIF(A1, ">0")' command. This will convert all of the Object numbers into 1 and all condensates identified into one.
+    -Take a sum of these two new columns and then divide Condensate Sum/Nuclei Sum
